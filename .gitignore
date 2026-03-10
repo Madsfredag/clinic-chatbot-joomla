@@ -1,0 +1,76 @@
+# =========================
+
+# OS files
+
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+
+# IDE / Editor
+
+# =========================
+
+.vscode/
+.idea/
+*.code-workspace
+
+# =========================
+
+# Node (if you later add build tooling)
+
+# =========================
+
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# =========================
+
+# Logs
+
+# =========================
+
+*.log
+
+# =========================
+
+# Environment files
+
+# =========================
+
+.env
+.env.local
+.env.*.local
+
+# =========================
+
+# Build artifacts
+
+# =========================
+
+dist/
+build/
+*.zip
+
+# =========================
+
+# Mac temporary files
+
+# =========================
+
+.AppleDouble
+.LSOverride
+Icon?
+
+# =========================
+
+# Joomla runtime (if ever copied locally)
+
+# =========================
+
+cache/
+logs/
+tmp/

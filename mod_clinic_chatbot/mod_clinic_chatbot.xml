@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="module" client="site" method="upgrade">
+    <name>Clinic Chatbot</name>
+    <version>0.1.0</version>
+    <author>Mads Freitag</author>
+    <description>Reusable chatbot module for dental clinics</description>
+
+    <namespace path="src">Mads\Module\ClinicChatbot</namespace>
+
+    <files>
+        <folder module="mod_clinic_chatbot">services</folder>
+        <folder>src</folder>
+        <folder>media</folder>
+    </files>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="Clinic Settings">
+                <field
+                    name="clinic_id"
+                    type="text"
+                    label="Clinic ID"
+                    description="Unique clinic identifier, e.g. aarhus or odense"
+                    default="default-clinic"
+                />
+                <field
+                    name="clinic_name"
+                    type="text"
+                    label="Clinic Name"
+                    default="Clinic Assistant"
+                />
+                <field
+                    name="clinic_phone"
+                    type="text"
+                    label="Clinic Phone"
+                    default=""
+                />
+                <field
+                    name="clinic_address"
+                    type="text"
+                    label="Clinic Address"
+                    default=""
+                />
+                <field
+                    name="booking_url"
+                    type="url"
+                    label="Booking URL"
+                    default=""
+                />
+                <field
+                    name="api_endpoint"
+                    type="url"
+                    label="API Endpoint"
+                    default=""
+                />
+                <field
+                    name="welcome_message"
+                    type="textarea"
+                    label="Welcome Message"
+                    rows="4"
+                    default="Hello! I can help with clinic information, treatments, and general dental questions."
+                />
+            </fieldset>
+        </fields>
+    </config>
+</extension>
