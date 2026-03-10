@@ -6,6 +6,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Dispatcher\DispatcherInterface;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 
 class Dispatcher implements DispatcherInterface
 {
@@ -27,11 +28,6 @@ class Dispatcher implements DispatcherInterface
             ['defer' => true]
         );
 
-        $module = $app->getDocument()->getBuffer('modules');
-
-        $params = $app->getParams();
-
-        // In module dispatcher context, use global $module if available
         global $module;
         $moduleParams = $module ? $module->params : null;
 
@@ -42,12 +38,13 @@ class Dispatcher implements DispatcherInterface
         $clinicPhone = htmlspecialchars($registry['clinic_phone'] ?? '', ENT_QUOTES, 'UTF-8');
         $clinicAddress = htmlspecialchars($registry['clinic_address'] ?? '', ENT_QUOTES, 'UTF-8');
         $bookingUrl = htmlspecialchars($registry['booking_url'] ?? '', ENT_QUOTES, 'UTF-8');
-        $apiEndpoint = htmlspecialchars($registry['api_endpoint'] ?? '', ENT_QUOTES, 'UTF-8');
         $welcomeMessage = htmlspecialchars(
-            $registry['welcome_message'] ?? 'Hello! I can help with clinic information, treatments, and general dental questions.',
+            $registry['welcome_message'] ?? 'Hej og velkommen. Jeg kan hjælpe med spørgsmål om klinikken, behandlinger og generelle tandspørgsmål.',
             ENT_QUOTES,
             'UTF-8'
         );
+
+        $apiEndpoint = Uri::base() . 'index.php?option=com_ajax&plugin=clinicchatbotproxy&format=json';
 
         $config = [
             'clinicId' => $clinicId,
@@ -71,7 +68,7 @@ class Dispatcher implements DispatcherInterface
         <div class="clinic-chatbot__header">
             <div>
                 <div class="clinic-chatbot__title">' . $clinicName . '</div>
-                <div class="clinic-chatbot__subtitle">How can we help today?</div>
+                <div class="clinic-chatbot__subtitle">Svarer på spørgsmål om klinikken og behandlinger</div>
             </div>
             <button id="chatbot-minimize" class="clinic-chatbot__minimize" type="button" aria-label="Minimize chat">−</button>
         </div>
@@ -93,7 +90,7 @@ class Dispatcher implements DispatcherInterface
     </div>
 
     <button id="chatbot-toggle" class="clinic-chatbot__toggle" type="button" aria-label="Open chat">
-        <span class="clinic-chatbot__toggle-icon">💬</span>
+        <span class="clinic-chatbot__toggle-icon">✦</span>
     </button>
 </div>';
     }

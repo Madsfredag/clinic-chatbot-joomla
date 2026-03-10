@@ -48,12 +48,6 @@
                     default=""
                 />
                 <field
-                    name="api_endpoint"
-                    type="url"
-                    label="API Endpoint"
-                    default=""
-                />
-                <field
                     name="welcome_message"
                     type="textarea"
                     label="Welcome Message"

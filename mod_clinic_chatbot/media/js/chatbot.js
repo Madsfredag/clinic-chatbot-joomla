@@ -19,6 +19,31 @@ document.addEventListener('DOMContentLoaded', function () {
         config = {};
     }
 
+    const endpoint =
+        config.apiEndpoint ||
+        '/index.php?option=com_ajax&plugin=clinicchatbotproxy&format=json';
+
+    function getOrCreateSessionId() {
+        const storageKey = 'clinicChatbotSessionId';
+        let sessionId = window.sessionStorage.getItem(storageKey);
+
+        if (!sessionId) {
+            if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+                sessionId = window.crypto.randomUUID();
+            } else {
+                sessionId =
+                    'chatbot-' +
+                    Date.now().toString(36) +
+                    '-' +
+                    Math.random().toString(36).slice(2);
+            }
+
+            window.sessionStorage.setItem(storageKey, sessionId);
+        }
+
+        return sessionId;
+    }
+
     function openChat() {
         root.classList.add('is-open');
         windowEl.setAttribute('aria-hidden', 'false');
@@ -38,49 +63,44 @@ document.addEventListener('DOMContentLoaded', function () {
         messages.scrollTop = messages.scrollHeight;
     }
 
-    async function sendToBackend(text) {
-        if (!config.apiEndpoint) {
-            const fallback = [];
-
-            if (config.clinicPhone) {
-                fallback.push('Phone: ' + config.clinicPhone);
-            }
-
-            if (config.clinicAddress) {
-                fallback.push('Address: ' + config.clinicAddress);
-            }
-
-            if (config.bookingUrl) {
-                fallback.push('Booking: ' + config.bookingUrl);
-            }
-
-            return (
-                'Backend not connected yet for ' +
-                (config.clinicName || 'this clinic') +
-                '. ' +
-                fallback.join(' | ')
-            );
+    function getReplyFromResponse(data) {
+        if (data && Array.isArray(data.data) && data.data[0] && typeof data.data[0].reply === 'string') {
+            return data.data[0].reply;
         }
 
-        const response = await fetch(config.apiEndpoint, {
+        if (data && data.data && typeof data.data.reply === 'string') {
+            return data.data.reply;
+        }
+
+        return null;
+    }
+
+    async function sendToBackend(text) {
+        const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                clinicId: config.clinicId,
-                clinicName: config.clinicName,
-                message: text
+                message: text,
+                sessionId: getOrCreateSessionId(),
+                pageUrl: window.location.href
             })
         });
 
-        if (!response.ok) {
-            throw new Error('API request failed');
-        }
-
         const data = await response.json();
 
-        return data.answer || 'No response received.';
+        if (!response.ok || !data.success) {
+            throw new Error((data && data.message) || 'API request failed');
+        }
+
+        const reply = getReplyFromResponse(data);
+
+        if (!reply) {
+            throw new Error('Invalid chatbot response');
+        }
+
+        return reply;
     }
 
     async function sendMessage() {
@@ -92,15 +112,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addMessage(text, 'user');
         input.value = '';
+        send.disabled = true;
+        input.disabled = true;
 
         try {
             const answer = await sendToBackend(text);
             addMessage(answer, 'bot');
         } catch (error) {
+            console.error(error);
             addMessage(
                 'Sorry, something went wrong. Please contact the clinic directly.',
                 'bot'
             );
+        } finally {
+            send.disabled = false;
+            input.disabled = false;
+            input.focus();
         }
     }
 
@@ -117,7 +144,9 @@ document.addEventListener('DOMContentLoaded', function () {
         closeChat();
     });
 
-    send.addEventListener('click', sendMessage);
+    send.addEventListener('click', function () {
+        sendMessage();
+    });
 
     input.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {

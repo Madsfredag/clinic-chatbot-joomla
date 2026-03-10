@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="ajax" method="upgrade">
+    <name>plg_ajax_clinicchatbotproxy</name>
+    <author>Clinic Chatbot</author>
+    <version>1.0.0</version>
+    <description>Secure AJAX proxy for the clinic chatbot backend</description>
+
+    <namespace path="src">ClinicChatbotProxy</namespace>
+
+    <files>
+        <folder plugin="clinicchatbotproxy">services</folder>
+        <folder>src</folder>
+    </files>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field
+                    name="backend_url"
+                    type="url"
+                    label="Backend URL"
+                    description="Example: http://localhost:3000/api/chat"
+                    required="true"
+                />
+                <field
+                    name="client_id"
+                    type="text"
+                    label="Client ID"
+                    required="true"
+                />
+                <field
+                    name="client_secret"
+                    type="text"
+                    label="Client Secret"
+                    required="true"
+                    filter="raw"
+                />
+                <field
+                    name="timeout_seconds"
+                    type="number"
+                    label="Timeout Seconds"
+                    default="10"
+                    min="1"
+                    max="60"
+                />
+            </fieldset>
+        </fields>
+    </config>
+</extension>
