@@ -1,28 +1,20 @@
 <?php
 
-namespace ClinicChatbotProxy\Extension;
+namespace Mads\Plugin\Ajax\Clinicchatbotproxy\Extension;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Plugin\CMSPlugin;
-use Joomla\Event\Event;
-use Joomla\Event\SubscriberInterface;
 use Joomla\Registry\Registry;
 
-final class Clinicchatbotproxy extends CMSPlugin implements SubscriberInterface
+final class Clinicchatbotproxy extends CMSPlugin
 {
     protected $autoloadLanguage = true;
 
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            'onAjaxClinicchatbotproxy' => 'onAjaxClinicchatbotproxy',
-        ];
-    }
-
-    public function onAjaxClinicchatbotproxy(Event $event): void
+    public function onAjaxClinicchatbotproxy(): array
     {
         $app = Factory::getApplication();
 
@@ -49,7 +41,6 @@ final class Clinicchatbotproxy extends CMSPlugin implements SubscriberInterface
         $message = trim((string) ($data['message'] ?? ''));
         $sessionId = trim((string) ($data['sessionId'] ?? ''));
         $pageUrl = trim((string) ($data['pageUrl'] ?? ''));
-        $clinic = $data['clinic'] ?? null;
 
         if ($message === '' || mb_strlen($message) > 4000) {
             throw new \RuntimeException('Invalid message', 400);
@@ -63,38 +54,30 @@ final class Clinicchatbotproxy extends CMSPlugin implements SubscriberInterface
             throw new \RuntimeException('Invalid pageUrl', 400);
         }
 
-        if (!is_array($clinic)) {
-            throw new \RuntimeException('Invalid clinic data', 400);
+        $params = ComponentHelper::getParams('com_clinicchatbot');
+
+        $clinicName = trim((string) $params->get('clinic_name', ''));
+        $clinicPhone = trim((string) $params->get('clinic_phone', ''));
+        $clinicAddress = trim((string) $params->get('clinic_address', ''));
+        $bookingUrl = trim((string) $params->get('booking_url', ''));
+
+        $backendUrl = trim((string) $params->get('backend_url', ''));
+        $clientId = trim((string) $params->get('client_id', ''));
+        $clientSecret = (string) $params->get('client_secret', '');
+        $timeoutSeconds = (int) $params->get('timeout_seconds', 10);
+
+        if (
+            $clinicName === '' ||
+            $clinicPhone === '' ||
+            $clinicAddress === '' ||
+            $bookingUrl === '' ||
+            !filter_var($bookingUrl, FILTER_VALIDATE_URL)
+        ) {
+            throw new \RuntimeException('Clinic settings are incomplete', 500);
         }
 
-        $clinicName = trim((string) ($clinic['clinicName'] ?? ''));
-        $phone = trim((string) ($clinic['phone'] ?? ''));
-        $address = trim((string) ($clinic['address'] ?? ''));
-        $bookingUrl = trim((string) ($clinic['bookingUrl'] ?? ''));
-
-        if ($clinicName === '') {
-            throw new \RuntimeException('Invalid clinicName', 400);
-        }
-
-        if ($phone === '') {
-            throw new \RuntimeException('Invalid phone', 400);
-        }
-
-        if ($address === '') {
-            throw new \RuntimeException('Invalid address', 400);
-        }
-
-        if ($bookingUrl === '' || !filter_var($bookingUrl, FILTER_VALIDATE_URL)) {
-            throw new \RuntimeException('Invalid bookingUrl', 400);
-        }
-
-        $backendUrl = trim((string) $this->params->get('backend_url', ''));
-        $clientId = trim((string) $this->params->get('client_id', ''));
-        $clientSecret = (string) $this->params->get('client_secret', '');
-        $timeoutSeconds = (int) $this->params->get('timeout_seconds', 10);
-
-        if ($backendUrl === '' || $clientId === '' || $clientSecret === '') {
-            throw new \RuntimeException('Plugin not configured', 500);
+        if ($backendUrl === '' || !filter_var($backendUrl, FILTER_VALIDATE_URL) || $clientId === '' || $clientSecret === '') {
+            throw new \RuntimeException('Component backend configuration is incomplete', 500);
         }
 
         $payload = [
@@ -103,8 +86,8 @@ final class Clinicchatbotproxy extends CMSPlugin implements SubscriberInterface
             'pageUrl' => $pageUrl,
             'clinic' => [
                 'clinicName' => $clinicName,
-                'phone' => $phone,
-                'address' => $address,
+                'phone' => $clinicPhone,
+                'address' => $clinicAddress,
                 'bookingUrl' => $bookingUrl,
             ],
         ];
@@ -116,8 +99,7 @@ final class Clinicchatbotproxy extends CMSPlugin implements SubscriberInterface
         }
 
         $timestamp = (string) time();
-        $signedPayload = $timestamp . '.' . $body;
-        $signature = hash_hmac('sha256', $signedPayload, $clientSecret);
+        $signature = hash_hmac('sha256', $timestamp . '.' . $body, $clientSecret);
 
         $headers = [
             'Content-Type' => 'application/json',
@@ -132,30 +114,25 @@ final class Clinicchatbotproxy extends CMSPlugin implements SubscriberInterface
         ]);
 
         $http = HttpFactory::getHttp($options);
-
-        try {
-            $response = $http->post($backendUrl, $body, $headers);
-        } catch (\Throwable $e) {
-            throw new \RuntimeException('Backend connection failed', 502, $e);
-        }
+        $response = $http->post($backendUrl, $body, $headers);
 
         $responseBody = (string) $response->body;
-        $decodedResponse = json_decode($responseBody, true);
+        $decoded = json_decode($responseBody, true);
 
         if ((int) $response->code < 200 || (int) $response->code >= 300) {
             $backendMessage = 'Backend request failed';
 
-            if (is_array($decodedResponse) && isset($decodedResponse['error']) && is_string($decodedResponse['error'])) {
-                $backendMessage = $decodedResponse['error'];
+            if (is_array($decoded) && isset($decoded['error']) && is_string($decoded['error'])) {
+                $backendMessage = $decoded['error'];
             }
 
             throw new \RuntimeException($backendMessage, (int) $response->code);
         }
 
-        if (!is_array($decodedResponse)) {
+        if (!is_array($decoded)) {
             throw new \RuntimeException('Invalid backend response', 502);
         }
 
-        $event->addResult($decodedResponse);
+        return $decoded;
     }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension method="upgrade" type="plugin" group="ajax">
+    <name>plg_ajax_clinicchatbotproxy</name>
+    <version>0.1.4</version>
+    <author>Mads Freitag</author>
+    <description>Clinic Chatbot Ajax proxy plugin</description>
+
+    <namespace path="src">Mads\Plugin\Ajax\Clinicchatbotproxy</namespace>
+
+    <files>
+        <folder plugin="clinicchatbotproxy">services</folder>
+        <folder>src</folder>
+    </files>
+</extension>

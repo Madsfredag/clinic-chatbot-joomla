@@ -8,7 +8,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Joomla\Event\DispatcherInterface;
-use ClinicChatbotProxy\Extension\Clinicchatbotproxy;
+use Mads\Plugin\Ajax\Clinicchatbotproxy\Extension\Clinicchatbotproxy;
 
 return new class implements ServiceProviderInterface {
     public function register(Container $container): void

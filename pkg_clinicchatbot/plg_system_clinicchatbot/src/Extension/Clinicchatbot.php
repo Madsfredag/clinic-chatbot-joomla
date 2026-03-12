@@ -76,7 +76,7 @@ final class Clinicchatbot extends CMSPlugin implements SubscriberInterface
             'clinicAddress' => $clinicAddress,
             'bookingUrl' => $bookingUrl,
             'welcomeMessage' => $welcomeMessage,
-            'apiEndpoint' => Uri::root() . 'index.php?option=com_clinicchatbot&task=chat.send',
+            'apiEndpoint' => Uri::root() . 'index.php?option=com_ajax&plugin=clinicchatbotproxy&format=json',
         ];
 
         $configJson = json_encode(
