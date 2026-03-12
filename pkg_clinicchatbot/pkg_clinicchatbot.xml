@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="package" method="upgrade" version="6.0">
+    <name>pkg_clinicchatbot</name>
+    <packagename>clinicchatbot</packagename>
+    <version>0.1.0</version>
+    <author>Mads Freitag</author>
+    <description>Clinic Chatbot package</description>
+
+    <files>
+        <file type="component" id="com_clinicchatbot">com_clinicchatbot</file>
+        <file type="plugin" id="clinicchatbot" group="system">plg_system_clinicchatbot</file>
+    </files>
+</extension>

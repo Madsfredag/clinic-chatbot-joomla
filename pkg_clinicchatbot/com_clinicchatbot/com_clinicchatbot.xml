@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="component" method="upgrade">
+    <name>com_clinicchatbot</name>
+    <version>0.1.0</version>
+    <author>Mads Freitag</author>
+    <description>Clinic Chatbot component</description>
+
+    <namespace path="src">Mads\Component\Clinicchatbot</namespace>
+
+    <administration>
+        <menu>Clinic Chatbot</menu>
+
+        <files folder="administrator">
+            <filename>com_clinicchatbot.php</filename>
+            <folder>services</folder>
+            <folder>src</folder>
+            <folder>forms</folder>
+            <folder>tmpl</folder>
+        </files>
+    </administration>
+
+    <site>
+        <files folder="site">
+            <filename>com_clinicchatbot.php</filename>
+            <folder>services</folder>
+            <folder>src</folder>
+            <folder>media</folder>
+        </files>
+    </site>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="Klinikoplysninger">
+                <field name="clinic_id" type="text" label="Clinic ID" required="true" filter="cmd" />
+                <field name="clinic_name" type="text" label="Kliniknavn" required="true" filter="string" />
+                <field name="clinic_phone" type="text" label="Telefonnummer" required="true" filter="string" />
+                <field name="clinic_address" type="text" label="Adresse" required="true" filter="string" />
+                <field name="booking_url" type="url" label="Booking URL" required="true" />
+                <field name="welcome_message" type="textarea" label="Velkomstbesked" rows="4" required="true" filter="string" />
+                <field name="clinic_knowledge" type="textarea" label="Klinikviden" rows="12" filter="raw" />
+            </fieldset>
+
+            <fieldset name="backend" label="Backend">
+                <field name="backend_url" type="url" label="Backend URL" required="true" />
+                <field name="client_id" type="text" label="Client ID" required="true" filter="cmd" />
+                <field name="client_secret" type="text" label="Client Secret" required="true" filter="raw" />
+                <field name="timeout_seconds" type="number" label="Timeout (sekunder)" default="10" min="1" max="60" />
+            </fieldset>
+        </fields>
+    </config>
+</extension>

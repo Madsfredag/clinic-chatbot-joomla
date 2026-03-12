@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension method="upgrade" type="plugin" group="system">
+    <name>plg_system_clinicchatbot</name>
+    <version>0.1.0</version>
+    <author>Mads Freitag</author>
+    <description>Clinic Chatbot system plugin</description>
+
+    <namespace path="src">Mads\Plugin\System\Clinicchatbot</namespace>
+
+    <files>
+        <folder plugin="clinicchatbot">services</folder>
+        <folder>src</folder>
+    </files>
+</extension>

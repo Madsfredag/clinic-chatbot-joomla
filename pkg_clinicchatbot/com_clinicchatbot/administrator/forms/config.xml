@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fieldset name="basic" label="Klinikoplysninger">
+        <field
+            name="clinic_id"
+            type="text"
+            label="Clinic ID"
+            required="true"
+            filter="cmd"
+        />
+        <field
+            name="clinic_name"
+            type="text"
+            label="Kliniknavn"
+            required="true"
+            filter="string"
+        />
+        <field
+            name="clinic_phone"
+            type="text"
+            label="Telefonnummer"
+            required="true"
+            filter="string"
+        />
+        <field
+            name="clinic_address"
+            type="text"
+            label="Adresse"
+            required="true"
+            filter="string"
+        />
+        <field
+            name="booking_url"
+            type="url"
+            label="Booking URL"
+            required="true"
+        />
+        <field
+            name="welcome_message"
+            type="textarea"
+            label="Velkomstbesked"
+            rows="4"
+            required="true"
+            filter="string"
+        />
+        <field
+            name="clinic_knowledge"
+            type="textarea"
+            label="Klinikviden"
+            rows="12"
+            filter="raw"
+        />
+        <field
+            name="backend_url"
+            type="url"
+            label="Backend URL"
+            required="true"
+        />
+        <field
+            name="client_id"
+            type="text"
+            label="Client ID"
+            required="true"
+            filter="cmd"
+        />
+        <field
+            name="client_secret"
+            type="text"
+            label="Client Secret"
+            required="true"
+            filter="raw"
+        />
+        <field
+            name="timeout_seconds"
+            type="number"
+            label="Timeout (sekunder)"
+            default="10"
+            min="1"
+            max="60"
+        />
+    </fieldset>
+</form>

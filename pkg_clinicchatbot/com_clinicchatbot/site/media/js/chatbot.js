@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const endpoint =
         config.apiEndpoint ||
-        '/index.php?option=com_ajax&plugin=clinicchatbotproxy&format=json';
+        '/index.php?option=com_clinicchatbot&task=chat.send';
 
     function getClinicConfig() {
         return {

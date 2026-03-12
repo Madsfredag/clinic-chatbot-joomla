@@ -49,6 +49,7 @@ final class Clinicchatbotproxy extends CMSPlugin implements SubscriberInterface
         $message = trim((string) ($data['message'] ?? ''));
         $sessionId = trim((string) ($data['sessionId'] ?? ''));
         $pageUrl = trim((string) ($data['pageUrl'] ?? ''));
+        $clinic = $data['clinic'] ?? null;
 
         if ($message === '' || mb_strlen($message) > 4000) {
             throw new \RuntimeException('Invalid message', 400);
@@ -60,6 +61,31 @@ final class Clinicchatbotproxy extends CMSPlugin implements SubscriberInterface
 
         if ($pageUrl === '' || mb_strlen($pageUrl) > 2000 || !filter_var($pageUrl, FILTER_VALIDATE_URL)) {
             throw new \RuntimeException('Invalid pageUrl', 400);
+        }
+
+        if (!is_array($clinic)) {
+            throw new \RuntimeException('Invalid clinic data', 400);
+        }
+
+        $clinicName = trim((string) ($clinic['clinicName'] ?? ''));
+        $phone = trim((string) ($clinic['phone'] ?? ''));
+        $address = trim((string) ($clinic['address'] ?? ''));
+        $bookingUrl = trim((string) ($clinic['bookingUrl'] ?? ''));
+
+        if ($clinicName === '') {
+            throw new \RuntimeException('Invalid clinicName', 400);
+        }
+
+        if ($phone === '') {
+            throw new \RuntimeException('Invalid phone', 400);
+        }
+
+        if ($address === '') {
+            throw new \RuntimeException('Invalid address', 400);
+        }
+
+        if ($bookingUrl === '' || !filter_var($bookingUrl, FILTER_VALIDATE_URL)) {
+            throw new \RuntimeException('Invalid bookingUrl', 400);
         }
 
         $backendUrl = trim((string) $this->params->get('backend_url', ''));
@@ -75,6 +101,12 @@ final class Clinicchatbotproxy extends CMSPlugin implements SubscriberInterface
             'message' => $message,
             'sessionId' => $sessionId,
             'pageUrl' => $pageUrl,
+            'clinic' => [
+                'clinicName' => $clinicName,
+                'phone' => $phone,
+                'address' => $address,
+                'bookingUrl' => $bookingUrl,
+            ],
         ];
 
         $body = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

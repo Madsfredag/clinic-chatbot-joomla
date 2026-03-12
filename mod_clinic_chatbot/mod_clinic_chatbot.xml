@@ -15,44 +15,67 @@
 
     <config>
         <fields name="params">
-            <fieldset name="basic" label="Clinic Settings">
+            <fieldset name="basic" label="Klinikoplysninger">
                 <field
                     name="clinic_id"
                     type="text"
                     label="Clinic ID"
-                    description="Unique clinic identifier, e.g. aarhus or odense"
-                    default="default-clinic"
+                    description="Unikt klient-id til backend, f.eks. videsignersmil eller fortanden"
+                    required="true"
+                    filter="cmd"
+                    default=""
                 />
                 <field
                     name="clinic_name"
                     type="text"
-                    label="Clinic Name"
-                    default="Clinic Assistant"
+                    label="Kliniknavn"
+                    required="true"
+                    filter="string"
+                    default=""
                 />
                 <field
                     name="clinic_phone"
                     type="text"
-                    label="Clinic Phone"
+                    label="Telefonnummer"
+                    required="true"
+                    filter="string"
                     default=""
                 />
                 <field
                     name="clinic_address"
                     type="text"
-                    label="Clinic Address"
+                    label="Adresse"
+                    required="true"
+                    filter="string"
                     default=""
                 />
                 <field
                     name="booking_url"
                     type="url"
                     label="Booking URL"
+                    required="true"
                     default=""
                 />
                 <field
                     name="welcome_message"
                     type="textarea"
-                    label="Welcome Message"
+                    label="Velkomstbesked"
                     rows="4"
-                    default="Hello! I can help with clinic information, treatments, and general dental questions."
+                    required="true"
+                    filter="string"
+                    default="Hej og velkommen. Jeg kan hjælpe med spørgsmål om klinikken, behandlinger og generelle tandspørgsmål."
+                />
+            </fieldset>
+
+            <fieldset name="knowledge" label="Klinikviden">
+                <field
+                    name="clinic_knowledge"
+                    type="textarea"
+                    label="Klinikbeskrivelse og behandlinger"
+                    description="Beskriv klinikken, behandlingstyper, særlige oplysninger og praktiske retningslinjer."
+                    rows="12"
+                    filter="raw"
+                    default=""
                 />
             </fieldset>
         </fields>
