@@ -16,6 +16,7 @@ final class ChatController extends BaseController
     public function send(): void
     {
         $app = Factory::getApplication();
+        $app->setHeader('Content-Type', 'application/json', true);
 
         try {
             if (!$app->isClient('site')) {
@@ -76,8 +77,8 @@ final class ChatController extends BaseController
                 throw new \RuntimeException('Clinic settings are incomplete', 500);
             }
 
-            if ($backendUrl === '' || $clientId === '' || $clientSecret === '') {
-                throw new \RuntimeException('Component not configured', 500);
+            if ($backendUrl === '' || !filter_var($backendUrl, FILTER_VALIDATE_URL) || $clientId === '' || $clientSecret === '') {
+                throw new \RuntimeException('Component backend configuration is incomplete', 500);
             }
 
             $payload = [

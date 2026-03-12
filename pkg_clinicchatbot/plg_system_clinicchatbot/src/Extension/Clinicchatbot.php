@@ -52,21 +52,20 @@ final class Clinicchatbot extends CMSPlugin implements SubscriberInterface
 
         $params = ComponentHelper::getParams('com_clinicchatbot');
 
-        $clinicName = (string) $params->get('clinic_name', '');
-        $clinicPhone = (string) $params->get('clinic_phone', '');
-        $clinicAddress = (string) $params->get('clinic_address', '');
-        $bookingUrl = (string) $params->get('booking_url', '');
-        $welcomeMessage = (string) $params->get(
+        $clinicName = trim((string) $params->get('clinic_name', ''));
+        $clinicPhone = trim((string) $params->get('clinic_phone', ''));
+        $clinicAddress = trim((string) $params->get('clinic_address', ''));
+        $bookingUrl = trim((string) $params->get('booking_url', ''));
+        $welcomeMessage = trim((string) $params->get(
             'welcome_message',
             'Hej og velkommen. Jeg kan hjælpe med spørgsmål om klinikken, behandlinger og generelle tandspørgsmål.'
-        );
+        ));
 
-        // If the component is not configured yet, do not inject anything.
         if (
-            trim($clinicName) === '' ||
-            trim($clinicPhone) === '' ||
-            trim($clinicAddress) === '' ||
-            trim($bookingUrl) === ''
+            $clinicName === '' ||
+            $clinicPhone === '' ||
+            $clinicAddress === '' ||
+            $bookingUrl === ''
         ) {
             return;
         }
@@ -80,7 +79,15 @@ final class Clinicchatbot extends CMSPlugin implements SubscriberInterface
             'apiEndpoint' => Uri::root() . 'index.php?option=com_clinicchatbot&task=chat.send',
         ];
 
-        $configJson = json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $configJson = json_encode(
+            $config,
+            JSON_UNESCAPED_UNICODE
+            | JSON_UNESCAPED_SLASHES
+            | JSON_HEX_TAG
+            | JSON_HEX_APOS
+            | JSON_HEX_QUOT
+            | JSON_HEX_AMP
+        );
 
         if ($configJson === false) {
             return;
