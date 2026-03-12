@@ -86,7 +86,7 @@ final class Clinicchatbot extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        $assetBase = Uri::root() . 'components/com_clinicchatbot/media';
+        $assetBase = Uri::root() . 'media/com_clinicchatbot';
         $escapedConfigJson = htmlspecialchars($configJson, ENT_QUOTES, 'UTF-8');
         $escapedClinicName = htmlspecialchars($clinicName, ENT_QUOTES, 'UTF-8');
         $escapedWelcomeMessage = htmlspecialchars($welcomeMessage, ENT_QUOTES, 'UTF-8');

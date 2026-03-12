@@ -24,9 +24,14 @@
             <filename>com_clinicchatbot.php</filename>
             <folder>services</folder>
             <folder>src</folder>
-            <folder>media</folder>
         </files>
     </site>
+
+    <media destination="com_clinicchatbot" folder="site/media">
+        <folder>css</folder>
+        <folder>js</folder>
+    </media>
+
 
     <config>
         <fields name="params">

@@ -15,7 +15,7 @@ use Joomla\DI\ServiceProviderInterface;
 return new class implements ServiceProviderInterface {
     public function register(Container $container): void
     {
-        $namespace = '\\Mads\\Component\\Clinicchatbot';
+        $namespace = 'Mads\\Component\\Clinicchatbot';
 
         $container->registerServiceProvider(new MVCFactory($namespace));
         $container->registerServiceProvider(new ComponentDispatcherFactory($namespace));
