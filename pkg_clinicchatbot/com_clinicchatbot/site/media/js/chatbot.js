@@ -129,7 +129,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function createMessageElement(text, type) {
         const message = document.createElement('div');
         message.className = 'chatbot-message ' + type;
-        message.textContent = text;
+
+        const parts = String(text)
+            .split(/\n{2,}/)
+            .map((part) => part.trim())
+            .filter(Boolean);
+
+        if (!parts.length) {
+            message.textContent = text;
+            return message;
+        }
+
+        parts.forEach((part) => {
+            const paragraph = document.createElement('p');
+            paragraph.className = 'chatbot-message__paragraph';
+            paragraph.textContent = part;
+            message.appendChild(paragraph);
+        });
+
         return message;
     }
 
