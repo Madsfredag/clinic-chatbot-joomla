@@ -2,13 +2,6 @@
 <form>
     <fieldset name="basic" label="Klinikoplysninger">
         <field
-            name="clinic_id"
-            type="text"
-            label="Clinic ID"
-            required="true"
-            filter="cmd"
-        />
-        <field
             name="clinic_name"
             type="text"
             label="Kliniknavn"
@@ -51,32 +44,14 @@
             filter="raw"
         />
         <field
-            name="backend_url"
-            type="url"
-            label="Backend URL"
-            required="true"
-        />
-        <field
             name="client_id"
-            type="text"
-            label="Client ID"
-            required="true"
+            type="hidden"
             filter="cmd"
         />
         <field
             name="client_secret"
-            type="text"
-            label="Client Secret"
-            required="true"
+            type="hidden"
             filter="raw"
-        />
-        <field
-            name="timeout_seconds"
-            type="number"
-            label="Timeout (sekunder)"
-            default="10"
-            min="1"
-            max="60"
         />
     </fieldset>
 </form>

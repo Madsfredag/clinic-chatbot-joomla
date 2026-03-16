@@ -109,7 +109,7 @@ final class Clinicchatbot extends CMSPlugin implements SubscriberInterface
         <div class="clinic-chatbot__header">
             <div>
                 <div class="clinic-chatbot__title">' . $escapedClinicName . '</div>
-                <div class="clinic-chatbot__subtitle">Svar på spørgsmål om klinikken og behandlinger</div>
+                <div class="clinic-chatbot__subtitle">Spørgsmål om klinikken og behandlinger</div>
             </div>
             <button id="chatbot-minimize" class="clinic-chatbot__minimize" type="button" aria-label="Minimer chat">−</button>
         </div>

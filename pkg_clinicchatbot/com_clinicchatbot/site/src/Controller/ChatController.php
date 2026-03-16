@@ -13,6 +13,7 @@ use Joomla\Registry\Registry;
 
 final class ChatController extends BaseController
 {
+    private const BACKEND_CHAT_URL = 'http://localhost:3000/api/chat';
     public function send(): void
     {
         $app = Factory::getApplication();
@@ -62,10 +63,10 @@ final class ChatController extends BaseController
             $clinicAddress = trim((string) $params->get('clinic_address', ''));
             $bookingUrl = trim((string) $params->get('booking_url', ''));
 
-            $backendUrl = trim((string) $params->get('backend_url', ''));
+            $backendUrl = self::BACKEND_CHAT_URL;
             $clientId = trim((string) $params->get('client_id', ''));
             $clientSecret = (string) $params->get('client_secret', '');
-            $timeoutSeconds = (int) $params->get('timeout_seconds', 10);
+            $timeoutSeconds = 30;
 
             if (
                 $clinicName === '' ||
@@ -77,7 +78,7 @@ final class ChatController extends BaseController
                 throw new \RuntimeException('Clinic settings are incomplete', 500);
             }
 
-            if ($backendUrl === '' || !filter_var($backendUrl, FILTER_VALIDATE_URL) || $clientId === '' || $clientSecret === '') {
+            if (!filter_var($backendUrl, FILTER_VALIDATE_URL) || $clientId === '' || $clientSecret === '') {
                 throw new \RuntimeException('Component backend configuration is incomplete', 500);
             }
 

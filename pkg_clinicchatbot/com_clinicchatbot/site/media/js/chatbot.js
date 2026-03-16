@@ -31,10 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const quickQuestions = Array.isArray(config.quickQuestions) && config.quickQuestions.length > 0
         ? config.quickQuestions
         : [
-            'Hvornår har I åbent?',
+            'Hvad koster en tandrensning?',
             'Hvordan booker jeg en tid?',
-            'Hvad gør jeg ved tandpine?',
-            'Hvilke behandlinger tilbyder I?'
+            'Råd om tandpleje',
+            'Hvilke behandlinger tilbyder I?',
         ];
 
     const promptText = String(config.closedPromptText || 'Har du brug for hjælp?').trim();
